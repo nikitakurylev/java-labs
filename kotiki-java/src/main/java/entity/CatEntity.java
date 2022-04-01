@@ -95,11 +95,6 @@ public class CatEntity {
         this.friends = friends;
     }
 
-    public void addFriend(CatEntity friend){
-        friends.add(friend);
-        friend.getFriends().add(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
