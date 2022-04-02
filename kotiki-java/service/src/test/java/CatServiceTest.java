@@ -58,4 +58,19 @@ public class CatServiceTest {
         catService.RemoveCat(murzik);
         assertEquals(0, petr.getCats().size());
     }
+
+    @Test
+    public void CatAdoptTest(){
+        catService.Adopt(ivan, murzik);
+        assertEquals(0, petr.getCats().size());
+        assertEquals(murzik, ivan.getCats().get(0));
+        assertEquals(murzik.getOwnerId(), ivan.getOwnerId());
+    }
+
+    @Test
+    public void CatFriendsTest(){
+        catService.MakeFriends(barsik, murzik);
+        assertEquals(murzik.getFriends().get(0), barsik);
+        assertEquals(barsik.getFriends().get(0), murzik);
+    }
 }
