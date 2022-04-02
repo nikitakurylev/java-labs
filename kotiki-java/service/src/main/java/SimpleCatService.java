@@ -1,6 +1,8 @@
 import entity.CatEntity;
 import entity.OwnerEntity;
 
+import java.util.ArrayList;
+
 public class SimpleCatService implements CatService {
 
     private final CatRepository catRepository;
@@ -12,14 +14,20 @@ public class SimpleCatService implements CatService {
     @Override
     public void AddCat(CatEntity cat, OwnerEntity owner) {
         cat.setOwnerId(owner.getOwnerId());
+        if(owner.getCats() == null)
+            owner.setCats(new ArrayList<>());
         owner.getCats().add(cat);
+        cat.setOwnerId(owner.getOwnerId());
         catRepository.AddCat(cat);
+        catRepository.UpdateOwner(owner);
     }
 
     @Override
     public void RemoveCat(CatEntity cat) {
-        catRepository.GetOwner(cat.getOwnerId()).getCats().remove(cat);
+        OwnerEntity owner = catRepository.GetOwner(cat.getOwnerId());
+        owner.getCats().remove(cat);
         catRepository.RemoveCat(cat);
+        catRepository.UpdateOwner(owner);
     }
 
     @Override
