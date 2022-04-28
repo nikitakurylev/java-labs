@@ -4,16 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CatServiceTest {
-    CatEntity barsik, murzik;
+    CatEntity  barsik, murzik;
     OwnerEntity ivan, petr;
-    CatRepository catRepository;
-    SimpleCatService catService;
+    repository.CatRepository catRepository;
+    repository.OwnerRepository ownerRepository;
+    service.CatServiceImpl catService;
 
     @BeforeEach
     public void Initialize() {
@@ -37,34 +39,27 @@ public class CatServiceTest {
         petr.getCats().add(murzik);
         murzik.setOwnerId(petr.getOwnerId());
 
-        catRepository = mock(CatRepository.class);
-        when(catRepository.GetCat(barsik.getCatId())).thenReturn(barsik);
-        when(catRepository.GetCat(murzik.getCatId())).thenReturn(murzik);
-        when(catRepository.GetOwner(ivan.getOwnerId())).thenReturn(ivan);
-        when(catRepository.GetOwner(petr.getOwnerId())).thenReturn(petr);
+        catRepository = mock(repository.CatRepository.class);
+        ownerRepository = mock(repository.OwnerRepository.class);
+        when(catRepository.findById(barsik.getCatId())).thenReturn(Optional.of(barsik) );
+        when(catRepository.findById(murzik.getCatId())).thenReturn(Optional.of(murzik));
+        when(ownerRepository.findById(ivan.getOwnerId())).thenReturn(Optional.of(ivan));
+        when(ownerRepository.findById(petr.getOwnerId())).thenReturn(Optional.of(petr));
 
-        catService = new SimpleCatService(catRepository);
+        catService = new service.CatServiceImpl(catRepository, ownerRepository);
     }
 
     @Test
     public void CatAddTest(){
         catService.AddCat(barsik, ivan);
         assertEquals(barsik, ivan.getCats().get(0));
-        assertEquals(barsik.getOwnerId(), ivan.getOwnerId());
+        assertEquals(barsik.getOwnerId().intValue(), ivan.getOwnerId());
     }
 
     @Test
     public void CatRemoveTest(){
         catService.RemoveCat(murzik);
         assertEquals(0, petr.getCats().size());
-    }
-
-    @Test
-    public void CatAdoptTest(){
-        catService.Adopt(ivan, murzik);
-        assertEquals(0, petr.getCats().size());
-        assertEquals(murzik, ivan.getCats().get(0));
-        assertEquals(murzik.getOwnerId(), ivan.getOwnerId());
     }
 
     @Test

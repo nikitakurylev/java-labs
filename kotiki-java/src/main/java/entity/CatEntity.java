@@ -14,7 +14,7 @@ public class CatEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "CatId")
+    @Column(name = "Cat_Id")
     private int catId;
     @Basic
     @Column(name = "Name")
