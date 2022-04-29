@@ -6,8 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import security.UserService;
 import service.CatService;
+import service.OwnerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +25,12 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class CatController {
     private final CatService catService;
+    private final OwnerService ownerService;
 
     @Autowired
-    public CatController(CatService catService) {
+    public CatController(CatService catService, OwnerService ownerService) {
         this.catService = catService;
+        this.ownerService = ownerService;
     }
 
     @GetMapping("/cat/{id}")
@@ -37,15 +44,18 @@ public class CatController {
     }
 
     @GetMapping("/cats")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<CatInfo>> getCats(@RequestParam Optional<String> name, @RequestParam Optional<String> breed, @RequestParam Optional<String> color) {
         List<CatInfo> result = new ArrayList<CatInfo>();
-        for (CatEntity cat : catService.GetCats())
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        for (CatEntity cat : catService.GetCats().stream().filter(cat -> Objects.equals(ownerService.FindOwnerById(cat.getOwnerId()).getName(), username)).collect(Collectors.toList()))
             result.add(new CatInfo(cat));
-        if(name.isPresent())
+        if (name.isPresent())
             result = result.stream().filter(catInfo -> Objects.equals(catInfo.getName(), name.get())).collect(Collectors.toList());
-        if(breed.isPresent())
+        if (breed.isPresent())
             result = result.stream().filter(catInfo -> Objects.equals(catInfo.getColor(), breed.get())).collect(Collectors.toList());
-        if(color.isPresent())
+        if (color.isPresent())
             result = result.stream().filter(catInfo -> Objects.equals(catInfo.getBreed(), color.get())).collect(Collectors.toList());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

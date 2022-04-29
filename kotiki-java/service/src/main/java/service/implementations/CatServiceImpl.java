@@ -1,4 +1,4 @@
-package service;
+package service.implementations;
 
 import entity.CatEntity;
 import entity.OwnerEntity;
@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import repository.CatRepository;
 import repository.OwnerRepository;
+import service.CatService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,3 @@
-import entity.CatEntity;
-import entity.OwnerEntity;
-import service.CatServiceImpl;
-
 public class Main {
     public static void main(String[] args) {
 //        CatEntity barsik = new CatEntity();
