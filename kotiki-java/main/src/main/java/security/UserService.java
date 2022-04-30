@@ -1,7 +1,5 @@
 package security;
 
-import entity.CatEntity;
-import entity.OwnerEntity;
 import repository.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -32,12 +29,11 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Unknown user: " + username);
         }
-        UserDetails userDetails = User.builder()
+        return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .roles(user.getRole())
                 .build();
-        return userDetails;
     }
 
     public void AddUser(UserEntity user) {

@@ -19,26 +19,12 @@ public class UserEntity {
         this.username = username;
     }
 
-//    private int ownerId;
-//
-//    @Basic
-//    @Column(name="owner_id")
-//    public int getOwnerId() {
-//        return ownerId;
-//    }
-//
-//    public void setOwnerId(int ownerId) {
-//        this.ownerId = ownerId;
-//    }
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name="owner_id")
+    @JoinColumn(name="owner_id")
     public OwnerEntity getOwner() {
         return owner;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="owner_id")
     public void setOwner(OwnerEntity owner) {
         this.owner = owner;
     }
