@@ -2,6 +2,7 @@ import entity.CatEntity;
 import entity.OwnerEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.implementations.CatServiceImpl;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -15,7 +16,7 @@ public class CatServiceTest {
     OwnerEntity ivan, petr;
     repository.CatRepository catRepository;
     repository.OwnerRepository ownerRepository;
-    service.CatServiceImpl catService;
+    CatServiceImpl catService;
 
     @BeforeEach
     public void Initialize() {
@@ -46,7 +47,7 @@ public class CatServiceTest {
         when(ownerRepository.findById(ivan.getOwnerId())).thenReturn(Optional.of(ivan));
         when(ownerRepository.findById(petr.getOwnerId())).thenReturn(Optional.of(petr));
 
-        catService = new service.CatServiceImpl(catRepository, ownerRepository);
+        catService = new CatServiceImpl(catRepository, ownerRepository);
     }
 
     @Test
